@@ -17,7 +17,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/templates.css' %}">
+        <script src="https://kit.fontawesome.com/ce485df5b5.js" crossorigin="anonymous"></script>
+        <link href="https://bootswatch.com/5/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+        {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'css/templates.css' %}"> {% endcomment %}
+
+
 
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
@@ -26,6 +30,63 @@
 
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
+        {% load wagtailimages_tags %}
+        {% comment %} {% image  %} {% endcomment %}
+        
+        {% block nav %}
+
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    {% comment %} <a class="navbar-brand" href="#">Navbar</a> {% endcomment %}
+    <img src={% block imageIcon %} {% endblock imageIcon%} alt="" width="70" height="40"/>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link {% if page.url == '/' %}active{% endif %}" href="/">Home
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if page.url == '/blog-page-1/' %}active{% endif %}" href="/blog-page-1/">Blog</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if page.url == '/flex-page/' %}active{% endif %}" href="/flex-page/">About</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Separated link</a>
+          </div>
+        </li>
+      </ul>
+      {% load i18n wagtailcore_tags %}
+
+    {% if page %}
+    {% for translation in page.get_translations.live %}
+        {% get_language_info for translation.locale.language_code as lang %}
+        <a href="{% pageurl translation %}" rel="alternate" hreflang="{{ language_code }}">
+            {{ lang.name_local }}
+        </a>
+    {% endfor %}
+    {% endif %}
+      <form class="d-flex">
+        <input class="form-control me-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+        {% endblock %}
 
         {% block content %}{% endblock %}
 
