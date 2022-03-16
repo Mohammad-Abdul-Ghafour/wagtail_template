@@ -1,4 +1,6 @@
-{% load static wagtailcore_tags wagtailuserbar %}
+{% load static wagtailcore_tags wagtailuserbar menus_tags %}
+
+{% get_menu "main" as navigation %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -19,9 +21,10 @@
 
   {# Global stylesheets #}
   <script src="https://kit.fontawesome.com/ce485df5b5.js" crossorigin="anonymous"></script>
+  {% comment %} <link href="https://bootswatch.com/5/vapor/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> {% endcomment %}
   <link href="https://bootswatch.com/5/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-  {% comment %}
-  <link rel="stylesheet" type="text/css" href="{% static 'css/templates.css' %}"> {% endcomment %}
+
+  <link rel="stylesheet" type="text/css" href="{% static 'css/templates.css' %}"> 
 
 
 
@@ -32,16 +35,13 @@
 
 <body class="{% block body_class %}{% endblock %}">
   {% wagtailuserbar %}
-  {% load wagtailimages_tags %}
-  {% comment %} {% image %} {% endcomment %}
 
   {% block nav %}
 
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      {% comment %} <a class="navbar-brand" href="#">Navbar</a> {% endcomment %}
-      <img src={% block imageIcon %} {% endblock imageIcon%} alt="" width="70" height="40" />
+      <a class="navbar-brand" href="#">LTUC</a> 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
         aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -49,28 +49,31 @@
 
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav me-auto">
+        {% for item in navigation.menu_items.all %}
+
+        {% if item.content %}
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+              aria-expanded="false">{{ item.link_title }}</a>
+            <div class="dropdown-menu">
+                  {% for block in item.content %}
+                    {% include_block block %}
+                  {% endfor %}
+            </div>
+        </li>
+
+        {% else %}
+
           <li class="nav-item">
-            <a class="nav-link {% if page.url == '/' %}active{% endif %}" href="/">Home
+            <a class="nav-link {% if page.url == item.link_page.url %}active{% endif %}" href="{{ item.link_page.url }}">{{ item.link_title }}
               <span class="visually-hidden">(current)</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link {% if page.url == '/blog-page-1/' %}active{% endif %}" href="/blog-page-1/">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if page.url == '/flex-page/' %}active{% endif %}" href="/flex-page/">About</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-              aria-expanded="false">Dropdown</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Separated link</a>
-            </div>
-          </li>
+
+        {% endif %}
+           
+        {% endfor %}   
         </ul>
         {% load i18n wagtailcore_tags %}
 
@@ -134,6 +137,7 @@
   <!-- Footer -->
 
   {# Global javascript #}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   <script type="text/javascript" src="{% static 'js/templates.js' %}"></script>
 
   {% block extra_js %}

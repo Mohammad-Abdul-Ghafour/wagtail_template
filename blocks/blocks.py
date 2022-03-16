@@ -43,3 +43,20 @@ class CardsBlock(blocks.StructBlock):
         template = "blocks/card_block.html"
         icon="placeholder"
         label="Cards"
+
+class DropDownBlock(blocks.StructBlock):
+    # link_title = blocks.CharBlock(blank=True,null=True,max_length=50)
+    drop_down = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("link_title",blocks.CharBlock(required=True,max_length=40)),
+                ("link_page",blocks.PageChooserBlock(required=False)),
+            ]
+        )
+    )
+    # open_in_new_tab = models.BooleanField(default=False,blank=True,)
+
+    class Meta:
+        template = "blocks/drop_down_block.html"
+        icon="placeholder"
+        label="Drop Down"
