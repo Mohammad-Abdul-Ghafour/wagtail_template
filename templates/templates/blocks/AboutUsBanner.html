@@ -1,0 +1,8 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% image self.image original as img %}
+    <div style="background-image: url( '{{ img.url }}' ); width: 100%; min-height: 500px; display: flex; justify-content: center; align-items: center;">
+        <p style="font-size: xx-large; font-family: fantasy;color: whitesmoke;">
+            {{ self.title }}
+        </p>
+    </div>
